@@ -44,21 +44,21 @@
                 success: function (data) {
                     data.features.forEach(function (obj) {
                         obj.properties.balloonContent = obj.properties.description;
-                            var currentColor = cityColors.filter((el) => el.name === obj.properties.city);
-                        
-                            if (obj.properties.type == 'Новострой'){}
-                            obj.options = {
-                                preset: "islands#" + 
-                                        (obj.properties.type == 'Новострой' ? currentColor[0].color : currentColor[0].altcolor ) + 
-                                        "DotIconWithCaption"
-                            }
-                            delete obj.properties.description;
-                            delete obj.properties.city;
-                            delete obj.properties.type;
-                            delete obj.properties.finished;
-                            // Добавляем описание объектов в формате JSON в менеджер объектов.
-                            objectManager.add(obj);
-                        });
+                        var currentColor = cityColors.filter((el) => el.name === obj.properties.city);
+                    
+                        // if (obj.properties.type == 'Новострой'){}
+                        // obj.options = {
+                        //     preset: "islands#" + 
+                        //             (obj.properties.type == 'Новострой' ? currentColor[0].color : currentColor[0].altcolor ) + 
+                        //             "DotIconWithCaption"
+                        // }
+                        delete obj.properties.description;
+                        delete obj.properties.city;
+                        delete obj.properties.type;
+                        delete obj.properties.finished;
+                        // Добавляем описание объектов в формате JSON в менеджер объектов.
+                        objectManager = objectManager.add(obj);
+                    });
                 }
             });
             // Добавляем объекты на карту.
