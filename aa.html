@@ -33,41 +33,28 @@
                 {name: "п. Трудовое",       color: "violet", altcolor: "darkViolet" },
 
             ];
-            var map = new ymaps.Map('map', {
+            var myMap = new ymaps.Map('map', {
                        center: [43.115542, 131.885494],
                        zoom: 4,
                     controls: ['zoomControl']
+                }),
+                objectManager = new ymaps.ObjectManager({
+                    // Чтобы метки начали кластеризоваться, выставляем опцию.
+                    clusterize: true,
+                    // ObjectManager принимает те же опции, что и кластеризатор.
+                    gridSize: 32,
+                    clusterDisableClickZoom: true
                 });
-            var objectManager = new ymaps.ObjectManager();
-            map.controls.get('zoomControl').options.set({size: 'small'});
+            myMap.controls.get('zoomControl').options.set({size: 'small'});
             objectManager.objects.options.set('preset', 'islands#greenDotIcon');
             objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
     
             // Добавляем объекты на карту.
-            map.geoObjects.add(objectManager);
+            myMap.geoObjects.add(objectManager);
 
             $.ajax({
-                url: "https://script.google.com/macros/s/AKfycbzy8WqeBuAprUxdnd3Y9m1Vr8xnbMCNrFpMXbIpN_yykVwi5KKkaLIrp4jLhN3-Mx5Q/exec"
-                // type: "GET",
-                // success: function (data) {
-                //     data.features.forEach(function (obj) {
-                //         obj.properties.balloonContent = obj.properties.description;
-                //         var currentColor = cityColors.filter((el) => el.name === obj.properties.city);
-                    
-                //         // if (obj.properties.type == 'Новострой'){}
-                //         // obj.options = {
-                //         //     preset: "islands#" + 
-                //         //             (obj.properties.type == 'Новострой' ? currentColor[0].color : currentColor[0].altcolor ) + 
-                //         //             "DotIconWithCaption"
-                //         // }
-                //         delete obj.properties.description;
-                //         delete obj.properties.city;
-                //         delete obj.properties.type;
-                //         delete obj.properties.finished;
-                //         // Добавляем описание объектов в формате JSON в менеджер объектов.
-                //         objectManager = objectManager.add(obj);
-                //     });
-                // }
+                url: "https://script.google.com/macros/s/AKfycbzy8WqeBuAprUxdnd3Y9m1Vr8xnbMCNrFpMXbIpN_yykVwi5KKkaLIrp4jLhN3-Mx5Q/exec",
+                type: "GET",
             }).done(function(data) {
                 objectManager.add(data);
             });
