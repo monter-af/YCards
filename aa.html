@@ -18,7 +18,9 @@
     <script src="https://api-maps.yandex.ru/2.1/?apikey=aba747f6-b17f-41b6-b603-844f2c6c603a&lang=ru_RU" type="text/javascript"></script>
 
     <script type="text/javascript">
-        ymaps.ready(function () {
+        ymaps.ready(init);
+        
+        function init() {
             let cityColors = [
                 {name: "г. Арсеньев",       color: "blue",   altcolor: "darkBlue"   },
                 {name: "г. Артем",          color: "gray",   altcolor: "night"      },
@@ -33,37 +35,43 @@
             ];
             var map = new ymaps.Map('map', {
                        center: [43.115542, 131.885494],
-                       zoom: 12,
+                       zoom: 4,
                     controls: ['zoomControl']
                 });
             var objectManager = new ymaps.ObjectManager();
             map.controls.get('zoomControl').options.set({size: 'small'});
-            $.ajax({
-                url: "https://script.google.com/macros/s/AKfycbwDvKOeED7gpAovifLuLThMikRkbHBopZqCDgzGfvRR9OuUpvjdSfWaA2r8V2XYRBm8/exec",
-                type: "GET",
-                success: function (data) {
-                    data.features.forEach(function (obj) {
-                        obj.properties.balloonContent = obj.properties.description;
-                        var currentColor = cityColors.filter((el) => el.name === obj.properties.city);
-                    
-                        // if (obj.properties.type == 'Новострой'){}
-                        // obj.options = {
-                        //     preset: "islands#" + 
-                        //             (obj.properties.type == 'Новострой' ? currentColor[0].color : currentColor[0].altcolor ) + 
-                        //             "DotIconWithCaption"
-                        // }
-                        delete obj.properties.description;
-                        delete obj.properties.city;
-                        delete obj.properties.type;
-                        delete obj.properties.finished;
-                        // Добавляем описание объектов в формате JSON в менеджер объектов.
-                        objectManager = objectManager.add(obj);
-                    });
-                }
-            });
+            objectManager.objects.options.set('preset', 'islands#greenDotIcon');
+            objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+    
             // Добавляем объекты на карту.
             map.geoObjects.add(objectManager);
-        });
+
+            $.ajax({
+                url: "https://script.google.com/macros/s/AKfycbzy8WqeBuAprUxdnd3Y9m1Vr8xnbMCNrFpMXbIpN_yykVwi5KKkaLIrp4jLhN3-Mx5Q/exec"
+                // type: "GET",
+                // success: function (data) {
+                //     data.features.forEach(function (obj) {
+                //         obj.properties.balloonContent = obj.properties.description;
+                //         var currentColor = cityColors.filter((el) => el.name === obj.properties.city);
+                    
+                //         // if (obj.properties.type == 'Новострой'){}
+                //         // obj.options = {
+                //         //     preset: "islands#" + 
+                //         //             (obj.properties.type == 'Новострой' ? currentColor[0].color : currentColor[0].altcolor ) + 
+                //         //             "DotIconWithCaption"
+                //         // }
+                //         delete obj.properties.description;
+                //         delete obj.properties.city;
+                //         delete obj.properties.type;
+                //         delete obj.properties.finished;
+                //         // Добавляем описание объектов в формате JSON в менеджер объектов.
+                //         objectManager = objectManager.add(obj);
+                //     });
+                // }
+            }).done(function(data) {
+                objectManager.add(data);
+            });
+        };
     </script>
 </head>
 <body>
