@@ -25,17 +25,17 @@
                        zoom: 4,
                     controls: ["zoomControl"]
                 });
-            var JSONID="AKfycbxa__mzmiUZmgSUCX5w_B9nSy63cHJtq5ekEqJW2QfdTlqtxmpts6sYs4i2pBeoX9-k";
-            // var objectManager = new ymaps.ObjectManager({
-            //         // Чтобы метки начали кластеризоваться, выставляем опцию.
-            //         clusterize: true,
-            //         // ObjectManager принимает те же опции, что и кластеризатор.
-            //         gridSize: 32,
-            //         clusterDisableClickZoom: true
-            //     });
+            var JSONID="AKfycbzfmZDof3U47e6oVcU6dND0KrVRK-HaRV91cxe48Y-ZAHfsJasYUp95tSvVmw1gKFzb";
+            var objectManager = new ymaps.ObjectManager({
+                    // Чтобы метки начали кластеризоваться, выставляем опцию.
+                    // clusterize: true,
+                    // ObjectManager принимает те же опции, что и кластеризатор.
+                    // gridSize: 32,
+                    // clusterDisableClickZoom: true
+                });
             myMap.controls.get("zoomControl").options.set({size: "small"});
-            // objectManager.objects.options.set('preset', 'islands#greenDotIcon');
-            // objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+            objectManager.objects.options.set('preset', 'islands#greenDotIcon');
+            objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
     
             // Добавляем объекты на карту.
             // myMap.geoObjects.add(objectManager);
@@ -44,15 +44,15 @@
                 url: "https://script.google.com/macros/s/"+JSONID+"/exec",
                 type: "GET",
             }).done(function(data) {
-                // objectManager.add(data.features);
+                objectManager.add(data);
 
-                data.features.forEach(function (obj){
-                    myMap.geoObjects
-                         .add(new ymaps.Placemark([obj.geometry.coordinates[1], obj.geometry.coordinates[0]],
-                                                  { balloonContent: obj.properties.description}, 
-                                                  { preset: "islands#" + obj.properties.color + "CircleDotIcon",   iconCaptionMaxWidth: "50" }))
+                // data.features.forEach(function (obj){
+                //     myMap.geoObjects
+                //          .add(new ymaps.Placemark([obj.geometry.coordinates[1], obj.geometry.coordinates[0]],
+                //                                   { balloonContent: obj.properties.description}, 
+                //                                   { preset: "islands#" + obj.properties.color + "CircleDotIcon",   iconCaptionMaxWidth: "50" }))
 
-                });
+                // });
             });
         };
     </script>
