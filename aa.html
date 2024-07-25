@@ -14,49 +14,45 @@
     </style>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script> -->
     <script src="https://api-maps.yandex.ru/2.1/?apikey=aba747f6-b17f-41b6-b603-844f2c6c603a&lang=ru_RU" type="text/javascript"></script>
 
     <script type="text/javascript">
         ymaps.ready(init);
         
         function init() {
-            let cityColors = [
-                {name: "г. Арсеньев",       color: "blue",   altcolor: "darkBlue"   },
-                {name: "г. Артем",          color: "gray",   altcolor: "night"      },
-                {name: "г. Большой Камень", color: "green",  altcolor: "darkGreen"  },
-                {name: "г. Владивосток",    color: "orange", altcolor: "darkOrange" },
-                {name: "г. Находка",        color: "black",  altcolor: "brown"      },
-                {name: "г. Уссурийск",      color: "pink",   altcolor: "lightPink"  },
-                {name: "п. Зима Южная",     color: "brown",  altcolor: "olive"      },
-                {name: "п. Новый",          color: "yellow", altcolor: "lightBlue"  },
-                {name: "п. Трудовое",       color: "violet", altcolor: "darkViolet" },
-
-            ];
-            var myMap = new ymaps.Map('map', {
+            var myMap = new ymaps.Map("map", {
                        center: [43.115542, 131.885494],
                        zoom: 4,
-                    controls: ['zoomControl']
-                }),
-                objectManager = new ymaps.ObjectManager({
-                    // Чтобы метки начали кластеризоваться, выставляем опцию.
-                    clusterize: true,
-                    // ObjectManager принимает те же опции, что и кластеризатор.
-                    gridSize: 32,
-                    clusterDisableClickZoom: true
+                    controls: ["zoomControl"]
                 });
-            myMap.controls.get('zoomControl').options.set({size: 'small'});
-            objectManager.objects.options.set('preset', 'islands#greenDotIcon');
-            objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+            var JSONID="AKfycbxa__mzmiUZmgSUCX5w_B9nSy63cHJtq5ekEqJW2QfdTlqtxmpts6sYs4i2pBeoX9-k";
+            // var objectManager = new ymaps.ObjectManager({
+            //         // Чтобы метки начали кластеризоваться, выставляем опцию.
+            //         clusterize: true,
+            //         // ObjectManager принимает те же опции, что и кластеризатор.
+            //         gridSize: 32,
+            //         clusterDisableClickZoom: true
+            //     });
+            myMap.controls.get("zoomControl").options.set({size: "small"});
+            // objectManager.objects.options.set('preset', 'islands#greenDotIcon');
+            // objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
     
             // Добавляем объекты на карту.
-            myMap.geoObjects.add(objectManager);
-
+            // myMap.geoObjects.add(objectManager);
+            
             $.ajax({
-                url: "https://script.google.com/macros/s/AKfycbzy8WqeBuAprUxdnd3Y9m1Vr8xnbMCNrFpMXbIpN_yykVwi5KKkaLIrp4jLhN3-Mx5Q/exec",
+                url: "https://script.google.com/macros/s/"+JSONID+"/exec",
                 type: "GET",
             }).done(function(data) {
-                objectManager.add(data);
+                // objectManager.add(data.features);
+
+                data.features.forEach(function (obj){
+                    myMap.geoObjects
+                         .add(new ymaps.Placemark([obj.geometry.coordinates[1], obj.geometry.coordinates[0]],
+                                                  { balloonContent: obj.properties.description}, 
+                                                  { preset: "islands#" + obj.properties.color + "CircleDotIcon",   iconCaptionMaxWidth: "50" }))
+
+                });
             });
         };
     </script>
