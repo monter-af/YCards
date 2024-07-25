@@ -38,12 +38,42 @@
             objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
     
             // Добавляем объекты на карту.
-            // myMap.geoObjects.add(objectManager);
+            myMap.geoObjects.add(objectManager);
             
-            $.ajax({
-                url: "https://script.google.com/macros/s/"+JSONID+"/exec",
-                type: "GET",
-            }).done(function(data) {
+            // $.ajax({
+            //     url: "https://script.google.com/macros/s/"+JSONID+"/exec",
+            //     type: "GET",
+            // }).done(function(json) {
+            
+            let json=`{
+                        "type": "FeatureCollection",
+                        "features": [
+                            { "type": "Feature", "id": 0, "geometry": { "type": "Point", "coordinates": [133.274163, 44.154019] }, "properties": { "hintContent": "г. Арсеньев, ул. Жуковского, д. 41"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 1, "geometry": { "type": "Point", "coordinates": [133.272789, 44.158003] }, "properties": { "hintContent": "г. Арсеньев, ул. Островского, д. 11"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 2, "geometry": { "type": "Point", "coordinates": [133.27154, 44.157156] }, "properties": { "hintContent": "г. Арсеньев, ул. Островского, д. 7"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 3, "geometry": { "type": "Point", "coordinates": [133.272555, 44.159736] }, "properties": { "hintContent": "г. Арсеньев, ул. Садовая, д. 12"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 4, "geometry": { "type": "Point", "coordinates": [132.102024, 43.32865] }, "properties": { "hintContent": "г. Артем, ул. Берзарина, д. 11"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 5, "geometry": { "type": "Point", "coordinates": [132.167619, 43.358088] }, "properties": { "hintContent": "г. Артем, ул. Вокзальная, д. 35/4"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 6, "geometry": { "type": "Point", "coordinates": [132.168508, 43.358232] }, "properties": { "hintContent": "г. Артем, ул. Вокзальная, д. 49/3"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 7, "geometry": { "type": "Point", "coordinates": [132.169388, 43.358383] }, "properties": { "hintContent": "г. Артем, ул. Вокзальная, д. 49А"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 8, "geometry": { "type": "Point", "coordinates": [132.20012, 43.359412] }, "properties": { "hintContent": "г. Артем, ул. Горького, д. 8/1"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 9, "geometry": { "type": "Point", "coordinates": [132.189313, 43.35835] }, "properties": { "hintContent": "г. Артем, ул. Дзержинского, д. 23"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 10, "geometry": { "type": "Point", "coordinates": [132.207594, 43.359621] }, "properties": { "hintContent": "г. Артем, ул. Кирова, д. 66/1"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 11, "geometry": { "type": "Point", "coordinates": [132.212831, 43.362197] }, "properties": { "hintContent": "г. Артем, ул. Кирова, д. 74"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 12, "geometry": { "type": "Point", "coordinates": [132.214906, 43.363777] }, "properties": { "hintContent": "г. Артем, ул. Кирова, д. 78Б"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 13, "geometry": { "type": "Point", "coordinates": [132.190032, 43.347612] }, "properties": { "hintContent": "г. Артем, ул. Ключевая"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 14, "geometry": { "type": "Point", "coordinates": [132.201988, 43.35401] }, "properties": { "hintContent": "г. Артем, ул. Куйбышева, д. 1"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 15, "geometry": { "type": "Point", "coordinates": [132.200973, 43.361483] }, "properties": { "hintContent": "г. Артем, ул. Куйбышева, д. 4"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 16, "geometry": { "type": "Point", "coordinates": [132.201647, 43.359398] }, "properties": { "hintContent": "г. Артем, ул. Куйбышева, д. 9"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 489, "geometry": { "type": "Point", "coordinates": [ 131.963414, 43.109323 ] }, "properties": { "hintContent": "г. Владивосток, ул. Нейбута, д. 45/1"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 490, "geometry": { "type": "Point", "coordinates": [ 131.969396, 43.220886 ] }, "properties": { "hintContent": "г. Владивосток, ул. Маковского, д. 120"}, "options": { "preset": "islands#blueDotIcon" } },
+                            { "type": "Feature", "id": 491, "geometry": { "type": "Point", "coordinates": [132.072765, 43.265648] }, "properties": { "hintContent": "г. Владивосток, ул. Маковского, д. 290"}, "options": { "preset": "islands#blueDotIcon" } }
+                        ]
+                    }`;
+            
+            
+                var data=JSON.parse(json);
+                objectManager.removeAll();
                 objectManager.add(data);
 
                 // data.features.forEach(function (obj){
@@ -53,7 +83,7 @@
                 //                                   { preset: "islands#" + obj.properties.color + "CircleDotIcon",   iconCaptionMaxWidth: "50" }))
 
                 // });
-            });
+        //     });
         };
     </script>
 </head>
