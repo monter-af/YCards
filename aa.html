@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>Добавление на карту GeoJSON файла из Конструктора карт</title>
+    <title>Отображение объектов на карте</title>
     <meta charset="utf-8">
 
     <style>
@@ -21,11 +21,11 @@
         
         function init() {
             var myMap = new ymaps.Map("map", {
-                       center: [43.115542, 131.885494],
-                       zoom: 4,
+                       center: [43.061956, 132.134011],
+                       zoom: 10,
                     controls: ["zoomControl"]
                 });
-            var JSONID="AKfycbzfmZDof3U47e6oVcU6dND0KrVRK-HaRV91cxe48Y-ZAHfsJasYUp95tSvVmw1gKFzb";
+            var JSONID="AKfycbyNto4-IGu-Bdlzh6Jf4LZdgGjeY_msN4zY01vrKQH8WWqIrUpNWGz6DgGgL2KabOzO";
             // var objectManager = new ymaps.ObjectManager({
             //         // Чтобы метки начали кластеризоваться, выставляем опцию.
             //         // clusterize: true,
@@ -43,14 +43,17 @@
             $.ajax({
                 url: "https://script.google.com/macros/s/"+JSONID+"/exec",
                 type: "GET",
-            }).done(function(json) {
-                data.features.forEach(function (obj){
-                    myMap.geoObjects
-                         .add(new ymaps.Placemark([obj.geometry.coordinates[1], obj.geometry.coordinates[0]],
-                                                  { balloonContent: obj.properties.description}, 
-                                                  { preset: "islands#" + obj.properties.color + "CircleDotIcon",   iconCaptionMaxWidth: "50" }))
-
+            }).done(function(data) {
+                data.features.forEach(function (obj) {
+                    if(obj.properties.statusObject === "Z") {
+                        myMap.geoObjects
+                        .add(new ymaps.Placemark([obj.geometry.coordinates[1], obj.geometry.coordinates[0]],
+                                                 { balloonContent: obj.properties.description }, 
+                                                 { preset: "islands#" + obj.properties.markerColor + "CircleDotIcon",   iconCaptionMaxWidth: "50" }
+                        ))
+                    }
                 });
+                // objectManager.add(data);
             });
         };
     </script>
