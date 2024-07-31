@@ -17,37 +17,108 @@
     <script src="https://api-maps.yandex.ru/2.1/?apikey=aba747f6-b17f-41b6-b603-844f2c6c603a&lang=ru_RU" type="text/javascript"></script>
 
     <script type="text/javascript">
-        ymaps.ready(init);
-        
-        function init() {
-            var JSONID="AKfycbwiFITFBZNrp5orkjI3y19CFKMhZdGZwlmVaoYDU_KvJRM0BOdIbNpDvEyzFD7jDVIJ";
-            var yMap = new ymaps.Map("map", {
-                       center: [43.061956, 132.134011],
-                       zoom: 10,
-                    controls: ["zoomControl"]
+        ymaps.ready()
+            .done(function (ym) {
+                var JSONID="AKfycbwiFITFBZNrp5orkjI3y19CFKMhZdGZwlmVaoYDU_KvJRM0BOdIbNpDvEyzFD7jDVIJ";
+                var yMap = new ym.Map("map", {
+                           center: [43.061956, 132.134011],
+                           zoom: 10,
+                        controls: ["zoomControl"]
+                    });
+                var objectManager = new ymaps.ObjectManager({
+                        // Чтобы метки начали кластеризоваться, выставляем опцию.
+                        clusterize: false,
+                        // ObjectManager принимает те же опции, что и кластеризатор.
+                        // gridSize: 32,
+                        // clusterDisableClickZoom: true
+                    });
+                var myCities=[]
+                    .map(function (title) {
+                        return new ymaps.control.ListBoxItem({
+                            data: {
+                                content: title
+                            },
+                            state: {
+                                selected: true
+                            }
+                        })
+                    });
+                var reducer = function (filters, filter) {
+                    filters[filter.data.get('content')] = filter.isSelected();
+                    return filters;
+                };
+                var listBoxControl = new ymaps.control.ListBox({
+                    data: {
+                        content: 'Фильтр',
+                        title: 'Фильтр'
+                    },
+                    items: myCities,
+                    state: {
+                        // Признак, развернут ли список.
+                        expanded: true,
+                        filters: myCities.reduce(reducer, {})
+                    }
                 });
-            var objectManager = new ymaps.ObjectManager({
-                    // Чтобы метки начали кластеризоваться, выставляем опцию.
-                    clusterize: false,
-                    // ObjectManager принимает те же опции, что и кластеризатор.
-                    // gridSize: 32,
-                    // clusterDisableClickZoom: true
+
+                yMap.controls.add(listBoxControl);
+
+                yMap.controls.get("zoomControl").options.set({size: "small"});
+                objectManager.objects.options.set('preset', 'islands#greenDotIcon');
+                objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+
+                listBoxControl.events.add(['select', 'deselect'], function (e) {
+                    var listBoxItem = e.get('target');
+                    var filters = ymaps.util.extend({}, listBoxControl.state.get('filters'));
+                    filters[listBoxItem.data.get('content')] = listBoxItem.isSelected();
+                    listBoxControl.state.set('filters', filters);
                 });
-            var myCities=[];
-            
-            yMap.controls.get("zoomControl").options.set({size: "small"});
-            objectManager.objects.options.set('preset', 'islands#greenDotIcon');
-            objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
-    
-            yMap.geoObjects.add(objectManager);
-            
-            $.ajax({
-                url: "https://script.google.com/macros/s/"+JSONID+"/exec",
-                type: "GET",
-            }).done(function(data) {
-                objectManager.add(data);
+
+                var filterMonitor = new ymaps.Monitor(listBoxControl.state);
+                    filterMonitor.add('filters', function (filters) {
+                    // Применим фильтр.
+                    objectManager.setFilter(getFilterFunction(filters));
+                });
+
+                function getFilterFunction(categories) {
+                    return function (obj) {
+                    var content = obj.properties.balloonContent;
+                        return categories[content]
+                    }
+                }
+                
+                yMap.geoObjects.add(objectManager);
+                
+                // $.ajax({
+                //     url: "https://script.google.com/macros/s/"+JSONID+"/exec",
+                //     type: "GET",
+                // }).done(function(data) {
+                //     objectManager.add(data);
+                //     // JSON.parse(JSON.stringify(data.features), function(k,v){
+                //     //     if (k === "clusterCaption") {
+                //     //         console.log(v);
+                //     //     }
+                //     // })
+
+                //     data.features.filter(el => {
+                //         if (!myCities.includes(el.properties.clusterCaption)) {
+                //             myCities.push(el.properties.clusterCaption);
+                //         }
+                //     });
+
+
+                //     //                console.log(data.features[0].properties.clusterCaption);
+                // });
+                jQuery.getJSON("https://script.google.com/macros/s/"+JSONID+"/exec", function (json) {
+                /** Сохраним ссылку на геообъекты на случай, если понадобится какая-либо постобработка.
+                 * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/GeoQueryResult.xml
+                 */
+                    var geoObjects = ym.geoQuery(json)
+                        .addToMap(yMap)
+                        .applyBoundsToMap(yMap, {
+                            checkZoomRange: true
+                        });
+                });
             });
-        };
     </script>
 </head>
 <body>
