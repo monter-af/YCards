@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Отображение объектов на карте</title>
+    <meta charset="utf-8" http-equiv="refresh" content="600">
+
+    <style>
+        html, body, .map {
+            width: 100%;
+            height: 93%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=aba747f6-b17f-41b6-b603-844f2c6c603a&lang=ru_RU" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        ymaps.ready()
+            .done(function (ym) {
+                var JSONID="AKfycbxlw-giiQ38syz1LQZyMEES-4lj6zhy585y5dJ7DiMRB1Cta0u1s3sJ0u5b7ohW9Mwq";
+                var yMap = new ym.Map("map", {
+                           center: [43.061956, 132.134011],
+                           zoom: 10,
+                        controls: ["zoomControl", "typeSelector", "searchControl", "routeButtonControl"]
+                    });
+                var objectManager = new ymaps.ObjectManager({
+                        clusterize: true,
+                    });
+                
+                // yMap.controls
+                //     .add('typeSelector')
+                //     .add('mapTools', { left: 35, top: 5 });
+
+                yMap.geoObjects.add(objectManager);
+                
+                jQuery.getJSON("https://script.google.com/macros/s/"+JSONID+"/exec", function (json) {
+                /** Сохраним ссылку на геообъекты на случай, если понадобится какая-либо постобработка.
+                 * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/GeoQueryResult.xml
+                 */
+                    var geoObjects = ym.geoQuery(json)
+                        .addToMap(yMap)
+                        .applyBoundsToMap(yMap, {
+                            checkZoomRange: true
+                        });
+                        // json.features.filter(el => {
+                        //     if (!myCities.includes(el.properties.clusterCaption)) {
+                        //         myCities.push(el.properties.clusterCaption);
+                        //     }
+                        // });
+                });
+            });
+    </script>
+</head>
+<body>
+<div id="map" class="map"></div>
+<table>
+    <tr>
+        <td style="vertical-align: top;">
+            <table border="1">
+                <tr>
+                    <th>Постановщик</th><th>Значок</th>
+                    <th>Постановщик</th><th>Значок</th>
+                    <th>Постановщик</th><th>Значок</th>
+                    <th>Постановщик</th><th>Значок</th>
+                    <th>Постановщик</th><th>Значок</th>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">БМ</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueMoneyIcon.png" alt="Money"></td>
+                    <td style="text-align: right;">КБ</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueAttentionIcon.png" alt="Attention"></td>
+                    <td style="text-align: right;">ОПиОА</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueCircusIcon.png" alt="Circus"></td>
+                    <td style="text-align: right;">ОС</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueChristianIcon.png" alt="Christian"></td>
+                    <td style="text-align: right;">ОЭ</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueScienceIcon.png" alt="Science"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">ТП</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueRepairShopIcon.png" alt="Repair"></td>
+                    <td style="text-align: right;">ЦУС</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueDogIcon.png" alt="Dog"></td>
+                    <td style="text-align: right;">Выполняется</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueVideoIcon.png" alt="Video"></td>
+                    <td style="text-align: right;">Отложено</td>
+                    <td><img src="https://yandex.ru/dev/jsapi-v2-1/doc/docs-assets/dev-jsapi-v2-1/b0754211a82845ecf9dbd2a44ecdd83d4f61f5e0/ru/v2-1/ref/_images/styles/signs/blueObservationIcon.png" alt="Observation"></td>
+                </tr>
+            </table>
+        </td>
+        <td style="vertical-align: top;">
+            <table border="1">
+                <tr>
+                    <th>Категория работ</th>
+                    <th>Цвет</th>
+                    <th>Категория работ</th>
+                    <th>Цвет</th>
+                    <th>Категория работ</th>
+                    <th>Цвет</th>
+                    <th>Категория работ</th>
+                    <th>Цвет</th>
+                    <th>Категория работ</th>
+                    <th>Цвет</th>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">ЮЛ</td>
+                    <td style="background-color: violet;"></td>
+                    <td style="text-align: right;">Ремонт ЮЛ</td>
+                    <td style="background-color: pink;"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">Сложное</td>
+                    <td style="background-color: red;"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">Ремонт ТКД</td>
+                    <td style="background-color: darkBlue;"></td>
+                    <td style="text-align: right;">Монтаж ТКД</td>
+                    <td style="background-color: blue;"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">Монтаж Домофон</td>
+                    <td style="background-color: darkorange;"></td>
+                    <td style="text-align: right;">Ремонт Домофон</td>
+                    <td style="background-color: orange;"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">Ремонт ВН</td>
+                    <td style="background-color: olive;"></td>
+                    <td style="text-align: right;">Монтаж ВН+ТКД</td>
+                    <td style="background-color: darkGreen"></td>
+                    <td style="text-align: right;">Монтаж ВН</td>
+                    <td style="background-color: green;"></td>
+                    <td style="text-align: right;">Ракурс</td>
+                    <td style="background-color: lightGreen;"></td>
+                    <td style="text-align: right;">Демонтаж ВН</td>
+                    <td style="background-color: black;"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">Выполняется</td>
+                    <td style="background-color: lightBlue;"></td>
+                    <td style="text-align: right;">Демонтаж ВН</td>
+                    <td style="background-color: slateGrey;"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

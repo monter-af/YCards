@@ -117,6 +117,16 @@
                         .applyBoundsToMap(yMap, {
                             checkZoomRange: true
                         });
+                        // json.features.filter(el => {
+                        //     if (!myCities.includes(el.properties.clusterCaption)) {
+                        //         myCities.push(el.properties.clusterCaption);
+                        //     }
+                        // });
+                        JSON.parse(json.features, function(k,v){
+                            if (k === "clusterCaption") {
+                                console.log(v);
+                            }
+                        });
                 });
             });
     </script>
